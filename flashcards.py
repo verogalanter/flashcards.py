@@ -1,13 +1,10 @@
 import random
-def quiz(correct):
-    #make correct and incorrect empty lists
-    #global correct
-    #correct = []
-    #global incorrect
-    incorrect = []
+import json
+import os
+
 
 #define dictionary of fashcards with questions and answers 
-    flashcards = {
+flashcards = {
         "What is red in Spanish": "rojo", "What is orange in Spanish": "anaranjado", "What is yellow in Spanish": "amarillo", 
         "What is green in Spanish": "verde", "What is blue in Spanish": "azul", "What is purple in Spanish": "morado",
         "What is white in Spanish": "blanco", "What is black in Spanish": "negro", "What is brown in Spanish": "marrón",   
@@ -17,10 +14,24 @@ def quiz(correct):
         "What is lilac in Spanish": "lila", "What is scarlet in Spanish": "escarlata"   
     }   
 
-    #give correct/incorrect value of 0
-    for i in range(len(flashcards)):
-        correct.append (0)
-        incorrect.append (0)
+correct = {}
+incorrect = {}
+
+#give correct/incorrect value of 0
+for key in flashcards:
+    correct[key]= 0
+    incorrect[key]= 0
+
+if os.path.exists ("flashcards.txt"):
+    with open ("flashcards.txt", "r") as f:
+        correct = json.load(f)
+
+def quiz(correct):
+    #make correct and incorrect empty lists
+    # global correct 
+    # correct = {}
+    # global incorrect
+
 
     #create a list of flashcard questions
     questions = list(flashcards.keys())
@@ -32,31 +43,35 @@ def quiz(correct):
     i = 0
 
     #loops through each question and ask the answer
-    global question
     for question in questions:
-        if not_answered_correctly (i, correct):
+        if not_answered_correctly (question, correct):
             print(question)
             answer = input("Enter your answer:")
             if answer.lower() == flashcards[question].lower():
                 print("Correct")
-                correct [i] += 1
+                correct [question] += 1
             else:
                 print(f"Incorrect. The answer is {flashcards[question]}")
-                incorrect [i] += 1
+                incorrect [question] += 1
         i += 1
 
     return correct
     
 
-def not_answered_correctly(i, correct):
-    return correct[i] == 0
+def not_answered_correctly(key, correct):
+    return correct[key] == 0
 
-c = []
-c = quiz(c)
-print (c)
-print ("Completed 1 quiz")
-quiz(c)
+while True:
+    correct = quiz(correct)
+    print (correct)
+    print ("Completed Quiz!")
+    ask = input ("Would you like to continue? ")
+    if ask == "No":
+        break
+    
+with open ("flashcards.txt", "w") as f:
+    json.dump(correct, f)
 
 
 #if correct == 0:
-#   print (question)
+#  print (question)
