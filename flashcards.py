@@ -66,7 +66,7 @@ while True:
     print (correct)
     print ("Completed Quiz!")
     ask = input ("Would you like to continue? ")
-    if ask == "No":
+    if ask == "no":
         break
     
 with open ("flashcards.txt", "w") as f:
